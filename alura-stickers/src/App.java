@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -21,12 +23,21 @@ public class App {
         var parser = new JsonParser();
         List<Map<String, String>> listaDeFilmes = parser.parse(body);
 
-        //exibir e manipular os dados
+        //exibir e manipular os dados 
         for (Map<String,String> filme : listaDeFilmes) {
-            System.out.println(filme.get("fullTitle"));
-            System.out.println(filme.get("image"));
-            System.out.println(filme.get("imDbRating"));
-            System.out.println("");
+
+            String urlImagem = filme.get("image");
+            String titulo = filme.get("title");
+
+            InputStream inputStream = new URL(urlImagem).openStream();
+            String nomeArquivo = titulo + ".png";
+           
+            var geradora = new GeradorDeFigurinhas();
+            geradora.criar(inputStream, "saida/" + nomeArquivo);
+
+            System.out.println(titulo);
+            System.out.println();
+
         }
     }
 }
